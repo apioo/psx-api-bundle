@@ -25,7 +25,7 @@ Make sure, that the bundle is registered at the `config/bundles.php` file:
 
 ```php
 return [
-    PSX\Bundle\PSXBundle::class => ['all' => true],
+    PSX\ApiBundle\PSXApiBundle::class => ['all' => true],
 ];
 ```
 
