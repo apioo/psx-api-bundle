@@ -98,9 +98,12 @@ return static function (ContainerConfigurator $container): void {
     $services->set(ResponseBuilder::class)
         ->arg('$supportedWriter', param('psx.supported_writer'));
 
-    $services->set(ModelCommand::class);
-    $services->set(SdkCommand::class);
-    $services->set(TableCommand::class);
+    $services->set(ModelCommand::class)
+        ->arg('$projectDir', param('kernel.project_dir'));
+    $services->set(SdkCommand::class)
+        ->arg('$projectDir', param('kernel.project_dir'));
+    $services->set(TableCommand::class)
+        ->arg('$projectDir', param('kernel.project_dir'));
     $services->set(PushCommand::class);
 
     $services->set(ControllerArgumentsListener::class);
