@@ -170,20 +170,6 @@ php bin/console api:push my_document_name
 Then you also need to provide a client id and secret for your account. The TypeHub platform basically tracks all changes of
 the API specification and it is possible to download different SDKs. 
 
-### Table
-
-At last there is a command to generate table classes for your API which is a lightweight alternative
-to Doctrine. This is complete optional and only useful if you like to write raw SQL queries. The command
-reads all tables from you database and generates type-safe repositories for each table at the `src/Table` folder.
-
-```
-php bin/console generate:table
-```
-
-This approach is database-first, instead of defining your database schema at an entity we use a tool like
-Doctrine Migrations to build the database schema and then you can use the command to generate all table
-classes.
-
 ## Technical
 
 This bundle tries to not change any Symfony behaviour, for example we use the existing `#[Route]` attribute instead

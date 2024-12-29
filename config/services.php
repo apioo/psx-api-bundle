@@ -102,8 +102,6 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$projectDir', param('kernel.project_dir'));
     $services->set(SdkCommand::class)
         ->arg('$projectDir', param('kernel.project_dir'));
-    $services->set(TableCommand::class)
-        ->arg('$projectDir', param('kernel.project_dir'));
     $services->set(PushCommand::class);
 
     $services->set(ControllerArgumentsListener::class);
