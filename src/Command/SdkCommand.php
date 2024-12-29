@@ -53,7 +53,7 @@ class SdkCommand extends Command
         $this
             ->addArgument('type', InputArgument::OPTIONAL, 'The target format of the SDK')
             ->addOption('namespace', 's', InputOption::VALUE_REQUIRED, 'A namespace which is used', null)
-            ->addOption('filter', 'e', InputOption::VALUE_REQUIRED, 'Optional a filter which is used', null)
+            ->addOption('filter', 'f', InputOption::VALUE_REQUIRED, 'Optional a filter which is used', null)
             ->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'Optional the output dir, the default is output/', 'output')
             ->addOption('config', 'c', InputOption::VALUE_REQUIRED, 'Optional the generator config', null)
             ->addOption('raw', 'r', InputOption::VALUE_NONE, 'Ignore packing the generated files in a zip file');
