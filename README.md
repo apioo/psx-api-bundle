@@ -32,7 +32,7 @@ return [
 ## Controller
 
 The following is a simple controller which shows how to use the PSX specific attributes to describe
-query parameters:
+different HTTP parameters:
 
 ```php
 <?php
@@ -46,12 +46,11 @@ use App\Model\Post;
 use App\Model\Message;
 use PSX\Api\Attribute\Body;
 use PSX\Api\Attribute\Param;
-use PSX\Api\Attribute\Post;
 use PSX\Api\Attribute\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class Post extends AbstractController
+final class PostController extends AbstractController
 {
     public function __construct(private PostService $service, private PostRepository $repository)
     {
