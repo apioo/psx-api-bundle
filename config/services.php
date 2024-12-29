@@ -86,7 +86,6 @@ return static function (ContainerConfigurator $container): void {
         ->args([
             tagged_iterator('psx.api_repository'),
             tagged_iterator('psx.api_configurator'),
-            param('psx.base_url')
         ]);
 
     $services->set(SymfonyAttribute::class);
