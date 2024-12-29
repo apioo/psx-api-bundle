@@ -49,10 +49,10 @@ class PSXApiBundle extends AbstractBundle
 
         $services = $container->services();
         $services->get(GeneratorFactory::class)
-            ->arg('$baseUrl', $config['psx']['base_url']);
+            ->arg('$baseUrl', $config['base_url'] ?? null);
 
         $services->get(Config::class)
-            ->arg('$clientId', $config['psx']['sdkgen_client_id'])
-            ->arg('$clientSecret', $config['psx']['sdkgen_client_secret']);
+            ->arg('$clientId', $config['sdkgen_client_id'] ?? null)
+            ->arg('$clientSecret', $config['sdkgen_client_secret'] ?? null);
     }
 }
