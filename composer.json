@@ -18,8 +18,7 @@
         "psx/data": "^7.0",
         "psx/schema": "^7.2",
         "psx/sql": "^4.1",
-        "symfony/framework-bundle": "^6.4|^7.0",
-        "symfony/serializer": "^7.1"
+        "symfony/framework-bundle": "^6.4|^7.0"
     },
     "autoload": {
         "psr-4": {
