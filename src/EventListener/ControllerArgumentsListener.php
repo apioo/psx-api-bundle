@@ -168,16 +168,15 @@ final readonly class ControllerArgumentsListener
 
     private function getControllerAndMethod(callable $controller): array
     {
-        if (is_object($controller)) {
+        $callableName = null;
+        if (!is_callable($controller, callable_name: $callableName)) {
             throw new \RuntimeException('Provided an invalid callable, must be in the format class::method');
-        } elseif (is_string($controller)) {
-            if (str_contains($controller, '::')) {
-                return explode('::', $controller, 2);
-            } else {
-                throw new \RuntimeException('Provided an invalid callable, must be in the format class::method');
-            }
-        } else {
-            return $controller;
         }
+
+        if (empty($callableName) || !str_contains($callableName, '::')) {
+            throw new \RuntimeException('Provided an invalid callable, must be in the format class::method');
+        }
+
+        return explode('::', $callableName, 2);
     }
 }
