@@ -39,21 +39,31 @@ use Symfony\Component\HttpKernel\KernelEvents;
 #[AsEventListener(event: KernelEvents::EXCEPTION, method: 'onKernelException')]
 final class ExceptionResponseListener
 {
+    public function __construct(private bool $debug)
+    {
+    }
+
     public function onKernelException(ExceptionEvent $event): void
     {
+        $headers = [];
         $exception = $event->getThrowable();
         if ($exception instanceof StatusCodeException) {
-            $title   = get_class($exception);
-            $message = $exception->getMessage() . ' in ' . $exception->getFile() . ' on line ' . $exception->getLine();
-            $trace   = $exception->getTraceAsString();
-
-            $error = new Error();
-            $error->setSuccess(false);
-            $error->setTitle($title);
-            $error->setMessage($message);
-            $error->setTrace($trace);
-
-            $event->setResponse(new JsonResponse($error, $exception->getStatusCode()));
+            $status = $exception->getStatusCode();
+        } else {
+            $status = 500;
         }
+
+        $title = get_class($exception);
+        $message = $exception->getMessage() . ' in ' . $exception->getFile() . ' on line ' . $exception->getLine();
+
+        $error = new Error();
+        $error->setSuccess(false);
+        $error->setTitle($title);
+        $error->setMessage($message);
+        if ($this->debug) {
+            $error->setTrace($exception->getTraceAsString());
+        }
+
+        $event->setResponse(new JsonResponse($error, $status, $headers));
     }
 }

@@ -105,7 +105,8 @@ return static function (ContainerConfigurator $container): void {
     $services->set(PushCommand::class);
 
     $services->set(ControllerArgumentsListener::class);
-    $services->set(ExceptionResponseListener::class);
+    $services->set(ExceptionResponseListener::class)
+        ->arg('$debug', param('kernel.debug'));
     $services->set(SerializeResponseListener::class);
 
 };
