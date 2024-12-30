@@ -17,9 +17,9 @@ use PSX\Api\ScannerInterface;
 use PSX\ApiBundle\Api\Parser\SymfonyAttribute;
 use PSX\ApiBundle\Api\Repository\SDKgen\Config;
 use PSX\ApiBundle\Api\Scanner\RouterScanner;
+use PSX\ApiBundle\ArgumentResolver\ValueResolver;
 use PSX\ApiBundle\Command\ModelCommand;
 use PSX\ApiBundle\Command\SdkCommand;
-use PSX\ApiBundle\Command\TableCommand;
 use PSX\ApiBundle\Data\ProcessorFactory;
 use PSX\ApiBundle\EventListener\ControllerArgumentsListener;
 use PSX\ApiBundle\EventListener\ExceptionResponseListener;
@@ -33,6 +33,7 @@ use PSX\Schema\SchemaManagerInterface;
 use PSX\Sql\TableManager;
 use PSX\Sql\TableManagerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
@@ -104,9 +105,11 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$projectDir', param('kernel.project_dir'));
     $services->set(PushCommand::class);
 
-    $services->set(ControllerArgumentsListener::class);
     $services->set(ExceptionResponseListener::class)
         ->arg('$debug', param('kernel.debug'));
     $services->set(SerializeResponseListener::class);
+
+    $services->set(ValueResolver::class)
+        ->tag('controller.argument_value_resolver');
 
 };
