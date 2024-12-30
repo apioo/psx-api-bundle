@@ -20,6 +20,7 @@
 
 namespace PSX\ApiBundle\Http;
 
+use Psr\Http\Message\StreamInterface;
 use PSX\Data\Body;
 use PSX\Data\Exception\WriteException;
 use PSX\Data\Exception\WriterNotFoundException;
@@ -31,9 +32,11 @@ use PSX\Data\WriterInterface;
 use PSX\Http\Environment\HttpResponseInterface;
 use PSX\Http\Exception\InternalServerErrorException;
 use PSX\Http\Exception\NotAcceptableException;
+use PSX\Schema\ContentType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * ResponseBuilder
@@ -81,12 +84,27 @@ class ResponseBuilder
             }
 
             if (is_string($body)) {
+                if (!isset($headers['Content-Type'])) {
+                    $headers['Content-Type'] = ContentType::TEXT;
+                }
+
                 return new Response($body, $statusCode, $headers);
+            } elseif ($body instanceof StreamInterface) {
+                if (!isset($headers['Content-Type'])) {
+                    $headers['Content-Type'] = ContentType::BINARY;
+                }
+
+                return new StreamedResponse(function () use ($body) {
+                    echo $body->getContents();
+                }, $statusCode, $headers);
             } elseif ($body instanceof Body\Json) {
                 return new JsonResponse($body, $statusCode, $headers);
             } elseif ($body instanceof Body\Form) {
-                $headers['Content-Type'] = 'application/x-www-form-urlencoded';
-                return new Response(http_build_query($body, '', '&'), $statusCode, $headers);
+                if (!isset($headers['Content-Type'])) {
+                    $headers['Content-Type'] = ContentType::FORM;
+                }
+
+                return new Response(http_build_query($body->getAll(), '', '&'), $statusCode, $headers);
             }
 
             return $this->buildWithProcessor($statusCode, $headers, $body, $options);
