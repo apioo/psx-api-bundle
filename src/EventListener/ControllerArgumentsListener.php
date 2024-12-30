@@ -47,6 +47,7 @@ use PSX\Schema\Type\ReferencePropertyType;
 use PSX\Schema\Type\StringPropertyType;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ErrorController;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -66,7 +67,12 @@ final readonly class ControllerArgumentsListener
 
     public function onKernelControllerArguments(ControllerArgumentsEvent $event): void
     {
-        [$controllerClass, $methodName] = $this->getControllerAndMethod($event->getController());
+        $controller = $event->getController();
+        if ($controller instanceof ErrorController) {
+            return;
+        }
+
+        [$controllerClass, $methodName] = $this->getControllerAndMethod($controller);
 
         $specification = $this->apiManager->getApi($controllerClass);
 
