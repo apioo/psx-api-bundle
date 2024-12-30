@@ -216,8 +216,8 @@ The `sdkgen_client_id` and `sdkgen_client_secret` are credentials to the [SDKgen
 ## Technical
 
 This bundle tries to not change any Symfony behaviour, for example we use the existing `#[Route]` attribute instead
-of the existing `#[Path]` attribute. This has some small tradeoffs, at first you are required to use the
-`#[Route]` attribute and `YAML`, `XML` or `PHP` routing is not supported, since otherwise the generate command will not
+of the `#[Path]` attribute. This has some small tradeoffs, at first you are required to use the
+`#[Route]` attribute, `YAML`, `XML` or `PHP` routing is not supported, since otherwise the generate command will not
 be able to parse the routes, and second your route has to specify a concrete HTTP method filter, since the SDK generator
 needs a concrete HTTP method for every endpoint.
 
