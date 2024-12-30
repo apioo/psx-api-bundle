@@ -3,12 +3,15 @@
 
 The PSX API bundle integrates the [PSX API components](https://phpsx.org/) into Symfony which help
 to build fully type-safe REST APIs. Basically the bundle provides additional attributes which you
-can use at your [controller](#controller) to map HTTP parameters to arguments of your controller.
-Based on those attributes and type-hints the bundle is able to generate different artifacts:
+can use at your [controller](#controller) to map HTTP parameters to arguments of your controller
+and commands to generate based on those attributes and type-hints different artifacts:
 
-* Generate OpenAPI specification without additional attributes
 * Generate Client SDKs for different languages i.e. TypeScript and PHP
+  * `php bin/console generate:sdk client-typescript`
+* Generate OpenAPI specification without additional attributes
+  * `php bin/console generate:sdk spec-openapi`
 * Generate DTO classes using [TypeSchema](https://typeschema.org/)
+  * `php bin/console generate:model`
 
 As you note this bundle is about REST APIs and not related to any PlayStation content, the name PSX
 was invented way back and is simply an acronym which stands for "**P**HP, **S**QL, **X**ML"
@@ -93,12 +96,76 @@ the incoming HTTP request. In the controller we use a fictional `PostService` an
 but you are complete free to design the controller how you like, for PSX it is only important to map
 the incoming HTTP request parameters to arguments and to provide a return type.
 
+### Raw payload
+
+We always recommend to generate concrete DTOs to describe the request and response payloads.
+If you need a raw payload we provide the following type-hints to receive a raw value.
+
+* `Psr\Http\Message\StreamInterface`
+  * Receive the raw request as stream `application/octet-stream`
+* `PSX\Data\Body\Json`
+  * Receive the raw request as JSON `application/json`
+* `PSX\Data\Body\Form`
+  * Receive the raw request as form `application/x-www-form-urlencoded`
+* `string`
+  * Receive the raw request as string `text/plain`
+
+For example to write a simple proxy method which returns the provided JSON payload s.
+
+```php
+#[Route('/post', methods: ['POST'])]
+public function update(#[Body] Json $body): Json
+{
+    return $body;
+}
+```
+
 ## Generator
+
+### SDK
+
+To generate an SDK you can simply run the following command:
+
+```
+php bin/console generate:sdk
+```
+
+This reads alls the attributes from your controller and writes the SDK to the `output` folder.
+At first argument you can also provide a type, by default this is `client-typescript` but you can also
+select a different type.
+
+* `client-php`
+* `client-typescript`
+* `spec-openapi`
+
+#### SDKgen
+
+Through the SDKgen project you have the option to generate also client SDKs for
+different programming languages, therefor you only need to register at the [SDKgen](https://sdkgen.app/)
+website to obtain a client id and secret which you need to set as `psx_api.sdkgen_client_id` and `psx_api.sdkgen_client_secret`
+at your config. After this you can use one of the following types:
+
+* `client-csharp`
+* `client-go`
+* `client-java`
+* `client-python`
+
+#### TypeHub
+
+If you want to share your API specification it is possible to push your specification to the [TypeHub](https://typehub.cloud/)
+platform with the following command:
+
+```
+php bin/console api:push my_document_name
+```
+
+Then you also need to provide a client id and secret for your account. The TypeHub platform basically tracks all changes of
+the API specification and it is possible to download different SDKs. 
 
 ### Model
 
-To generate the model classes for the incoming and outgoing payload this bundle provides
-a model generator s.
+This bundle also provides a model generator which helps to generate DTOs to describe the
+incoming and outgoing payload s.
 
 ```
 php bin/console generate:model
@@ -130,45 +197,21 @@ The following is an example specification to generate a simple Student model.
 }
 ```
 
-### SDK
+## Configuration
 
-To generate an SDK you can simply run the following command:
+The bundle needs the following `psx_api.yaml` configuration:
 
-```
-php bin/console generate:sdk
-```
-
-This reads alls the attributes from your controller and writes the SDK to the `output` folder.
-At first argument you can also provide a type, by default this is `client-typescript` but you can also
-select a different type.
-
-* `client-php`
-* `client-typescript`
-* `spec-openapi`
-
-#### SDKgen
-
-Through the SDKgen project you have the option to generate also client SDKs for
-different programming languages, therefor you only need to register at the [SDKgen](https://sdkgen.app/)
-website to obtain a client id and secret which you need to set as `psx.sdkgen_client_id` and `psx.sdkgen_client_secret`
-at your config. After this you can use one of the following types:
-
-* `client-csharp`
-* `client-go`
-* `client-java`
-* `client-python`
-
-#### TypeHub
-
-If you want to share your API specification it is possible to push your specification to the [TypeHub](https://typehub.cloud/)
-platform with the following command:
-
-```
-php bin/console api:push my_document_name
+```yaml
+psx_api:
+  base_url: 'https://api.acme.com'
+  sdkgen_client_id: ''
+  sdkgen_client_secret: ''
 ```
 
-Then you also need to provide a client id and secret for your account. The TypeHub platform basically tracks all changes of
-the API specification and it is possible to download different SDKs. 
+The `base_url` is the absolute url to your API so that you don't need to provide the
+base url at your client SDK.
+
+The `sdkgen_client_id` and `sdkgen_client_secret` are credentials to the [SDKgen](https://sdkgen.app/) app.
 
 ## Technical
 
