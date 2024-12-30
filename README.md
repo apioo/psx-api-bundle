@@ -221,8 +221,14 @@ of the existing `#[Path]` attribute. This has some small tradeoffs, at first you
 be able to parse the routes, and second your route has to specify a concrete HTTP method filter, since the SDK generator
 needs a concrete HTTP method for every endpoint.
 
-Basically this bundle only registers a `ControllerArgumentsListener` to parse the attributes and a
-`SerializeResponseListener` to transform the response of the controller.
+Basically the bundle only registers the following classes:
+
+* `PSX\ApiBundle\ArgumentResolver\ValueResolver`
+  * To parse the attributes of each argument and transform the incoming value
+* `PSX\ApiBundle\EventListener\SerializeResponseListener`
+  * To transform the response of the controller
+* `PSX\ApiBundle\EventListener\ExceptionResponseListener`
+  * To transform the exception response
 
 ## Community
 
