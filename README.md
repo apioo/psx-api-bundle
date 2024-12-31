@@ -62,7 +62,7 @@ final class PostController extends AbstractController
     #[Route('/post', methods: ['GET'])]
     public function getAll(#[Query] ?string $filter): PostCollection
     {
-        return $this->repository->findAll();
+        return $this->repository->findAll($filter);
     }
 
     #[Route('/post/{id}', methods: ['GET'])]
@@ -117,6 +117,25 @@ For example to write a simple proxy method which returns the provided JSON paylo
 public function update(#[Body] Json $body): Json
 {
     return $body;
+}
+```
+
+### Multiple response types
+
+In case your method can return different response types you can use the `#[Outgoing]` attribute to
+define a response schema independent of the return type.
+
+```php
+#[Route('/post', methods: ['POST'])]
+#[Outgoing(201, Message::class)]
+#[Outgoing(400, Error::class)]
+public function update(#[Body] Post $body): JsonResponse
+{
+    if (empty($body->getTitle())) {
+        return new JsonResponse(['error' => 'An error occurred'], 400);
+    }
+
+    return new JsonResponse(['success' => true], 201);
 }
 ```
 
