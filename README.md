@@ -114,7 +114,7 @@ For example to write a simple proxy method which returns the provided JSON paylo
 
 ```php
 #[Route('/post', methods: ['POST'])]
-public function update(#[Body] Json $body): Json
+public function create(#[Body] Json $body): Json
 {
     return $body;
 }
@@ -129,13 +129,13 @@ define a response schema independent of the return type.
 #[Route('/post', methods: ['POST'])]
 #[Outgoing(201, Message::class)]
 #[Outgoing(400, Error::class)]
-public function update(#[Body] Post $body): JsonResponse
+public function create(#[Body] Post $body): JsonResponse
 {
     if (empty($body->getTitle())) {
-        return new JsonResponse(['error' => 'An error occurred'], 400);
+        return new JsonResponse(new Error('An error occurred'), 400);
     }
 
-    return new JsonResponse(['success' => true], 201);
+    return new JsonResponse(new Message('Post successfully created')], 201);
 }
 ```
 
