@@ -56,6 +56,8 @@ class SymfonyAttribute extends Attribute
 
                 $result[] = new Attr\Path(Inflection::convertPlaceholderToColon($path));
                 $result = array_merge($result, $this->getMethods($instance));
+            } else {
+                $result[] = $instance;
             }
         }
 
