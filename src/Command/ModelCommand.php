@@ -79,7 +79,7 @@ class ModelCommand extends Command
         if ($generator instanceof FileAwareInterface && $response instanceof Chunks) {
             $count = 0;
             foreach ($response->getChunks() as $file => $code) {
-                file_put_contents($target . '/' . $generator->getFileName($file), $generator->getFileContent('' . $code));
+                file_put_contents($target . '/' . $generator->getFileName($file), $generator->getFileContent((string) $code));
                 $count++;
             }
 

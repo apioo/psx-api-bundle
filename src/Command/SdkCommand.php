@@ -93,7 +93,7 @@ class SdkCommand extends Command
         if ($content instanceof Chunks) {
             if ($input->getOption('raw')) {
                 foreach ($content->getChunks() as $identifier => $code) {
-                    file_put_contents($dir . '/' . $identifier, '' . $code);
+                    file_put_contents($dir . '/' . $identifier, (string) $code);
                 }
             } else {
                 if (!empty($filterName)) {

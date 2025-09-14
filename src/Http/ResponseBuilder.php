@@ -171,13 +171,23 @@ class ResponseBuilder
     protected function getWriterOptions(Request $request): WriterOptions
     {
         $options = new WriterOptions();
-        $options->setContentType('' . $request->headers->get('Accept'));
-        $options->setFormat('' . $request->query->get('format'));
+
+        $accept = $request->headers->get('Accept');
+        if (is_string($accept)) {
+            $options->setContentType($accept);
+        }
+
+        $format = $request->query->get('format');
+        if (is_string($format)) {
+            $options->setFormat($format);
+        }
+
         $options->setSupportedWriter($this->supportedWriter);
         $options->setWriterCallback(function(WriterInterface $writer) use ($request){
             if ($writer instanceof Writer\Jsonp) {
-                if (!$writer->getCallbackName()) {
-                    $writer->setCallbackName('' . $request->query->get('callback'));
+                $callback = $request->query->get('callback');
+                if (!$writer->getCallbackName() && is_string($callback)) {
+                    $writer->setCallbackName($callback);
                 }
             }
         });
