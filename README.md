@@ -135,7 +135,7 @@ public function create(#[Body] Post $body): JsonResponse
         return new JsonResponse(new Error('An error occurred'), 400);
     }
 
-    return new JsonResponse(new Message('Post successfully created')], 201);
+    return new JsonResponse(new Message('Post successfully created'), 201);
 }
 ```
 
